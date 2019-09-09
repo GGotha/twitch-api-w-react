@@ -3,17 +3,22 @@ import React, { Component } from "react";
 import { Ola, CaixaInput, Botao, Formulario } from "./styles";
 import Streams from "../../components/Streams";
 import api from "../../services/api";
+import { Card } from "react-bootstrap";
 
 // import { Container } from './styles';
 
 export default class Main extends Component {
-  state = {
-    loading: false,
-    repositoryInput: "",
-    repositories: []
-  };
+  constructor(props) {
+    super(props);
 
-  handleNull = async e => {};
+    this.state = {
+      loading: false,
+      repositoryInput: "",
+      repositories: [],
+      alert: false,
+      show: false
+    };
+  }
 
   handleAddRepository = async e => {
     e.preventDefault();
@@ -22,18 +27,21 @@ export default class Main extends Component {
 
     try {
       const response = await api.get(
-        `/kraken/streams/${
-          this.state.repositoryInput
-        }?client_id=ckcemgtexvmey8lru22xg321bm861r`
+        `/kraken/streams/${this.state.repositoryInput}?client_id=ckcemgtexvmey8lru22xg321bm861r`
       );
 
-      this.setState({
-        repositoryInput: "",
-        repositories: [...this.state.repositories, response.data]
-      });
-      console.log(response);
+      if (response.data.stream === null || undefined) {
+        this.setState({ alert: true });
+      } else {
+        this.setState({ alert: false });
+
+        this.setState({
+          repositoryInput: "",
+          repositories: [...this.state.repositories, response.data]
+        });
+      }
     } catch (err) {
-      console.log(err);
+      console.log("erro");
     } finally {
       this.setState({ loading: false });
     }
@@ -41,30 +49,6 @@ export default class Main extends Component {
 
   render() {
     return (
-      /*       <Container>
-        <Image>
-          <Logo src={logo} alt="Logo twitch" />
-        </Image>
-
-        <Form onSubmit={this.handleAddRepository}>
-          <Search>Procure seu Streamer favorito</Search>
-          <CaixaInp
-            type="text"
-            required={true}
-            value={this.state.repositoryInput}
-            onChange={e => this.setState({ repositoryInput: e.target.value })}
-          />
-          <Btn type="submit">
-            {this.state.loading ? (
-              <i className="fa fa-spinner fa-pulse" />
-            ) : (
-              "Procurar"
-            )}
-          </Btn>
-        </Form>
-
-        <Streams repositories={this.state.repositories} />
-      </Container> */
       <Ola>
         <Formulario onSubmit={this.handleAddRepository}>
           <div className="form-group">
@@ -84,6 +68,19 @@ export default class Main extends Component {
           </Botao>
         </Formulario>
         <Streams repositories={this.state.repositories} />
+        <label>
+          {this.state.alert === true ? (
+            <>
+              <Card style={{ marginTop: "10px" }}>
+                <Card.Body>
+                  A stream que você procurou está offline ou não existe
+                </Card.Body>
+              </Card>
+            </>
+          ) : (
+            ""
+          )}
+        </label>
       </Ola>
     );
   }

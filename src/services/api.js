@@ -5,5 +5,3 @@ const api = axios.create({
 });
 
 export default api;
-
-//https://api.twitch.tv/kraken/streams/

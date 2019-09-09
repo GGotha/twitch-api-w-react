@@ -5,33 +5,15 @@ import { Container, Repository, Image, Logo } from "./styles";
 const Streams = ({ repositories }) => (
   <Container>
     {repositories.map(repository => (
-      <Repository key={"ckcemgtexvmey8lru22xg321bm861r"}>
-        {/* <header>
-          <img src={repository.stream.preview.large} alt="" />
-          <strong>
-            {repository.stream.channel.display_name} is{" "}
-            {repository.stream.stream_type}
-          </strong>
-          <small>
-            Playing:
-            <span> {repository.stream.game}</span>
-          </small>
-        </header>
-        <ul>
-          <li>
-            {repository.stream.viewers} <small>Viewers</small>
-          </li>
-          <li>
-            {repository.stream.channel.followers} <small>Followers</small>
-          </li>
-          <li>
-            {repository.stream.channel.views} <small>Total Views</small>
-          </li>
-        </ul> */}
+      <Repository key={repository.stream._id}>
         <div className="card text-white bg-dark mb-3">
           <div className="card-header">
             <a href={repository.stream.channel.url} target="blank">
-              <Image src={repository.stream.preview.large} alt="" />
+              <Image
+                src={repository.stream.preview.large}
+                style={{ height: "20vh" }}
+                alt=""
+              />
             </a>
           </div>
           <div className="card-body">
